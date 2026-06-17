@@ -259,7 +259,16 @@ with gr.Blocks(title="Crypto Breakout Scanner", theme=gr.themes.Soft(), css=cust
             
     scan_btn.click(fn=run_web_screener, inputs=[tf_input, vol_input, look_input], outputs=output_html)
 
+# Pull the secure credentials from Render settings
 app_user = os.environ.get("APP_USERNAME", "admin") 
 app_pass = os.environ.get("APP_PASSWORD", "default_pass")
 
-app.launch(auth=(app_user, app_pass))
+# Grab the port assigned by Render
+port = int(os.environ.get("PORT", 10000))
+
+# Launch with Render's required host and port settings
+app.launch(
+    auth=(app_user, app_pass), 
+    server_name="0.0.0.0",  # Required by Render
+    server_port=port        # Required by Render
+)
